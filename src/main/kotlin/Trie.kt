@@ -1,7 +1,6 @@
 import java.math.BigInteger
 import java.security.MessageDigest
 import kotlin.system.exitProcess
-import kotlinx.coroutines.*
 
 
 internal class Trie {
@@ -13,9 +12,6 @@ internal class Trie {
     val md = MessageDigest.getInstance("MD5")
     var hash: String = ""
 
-    val isEmpty: Boolean
-        get() = (root == null || root.children?.isEmpty())
-
     init {
         root = Node()
     }
@@ -25,7 +21,6 @@ internal class Trie {
         var current = root
 
         for (i in 0 until word.length) {
-//            current?.children?.putIfAbsent(word[i], Node())
             current = current?.children?.getOrPut(word[i], { Node() })
         }
         current!!.isEndOfWord = true
@@ -37,24 +32,7 @@ internal class Trie {
         return root
     }
 
-    fun counter(): Int {
-        return counter
-    }
-
-
-    fun containsNode(word: String): Boolean {
-        var current = root
-
-        for (i in 0 until word.length) {
-            val char = word[i]
-            val node = current?.children?.get(char) ?: return false
-            current = node
-        }
-        return current!!.isEndOfWord
-    }
-
-
-    fun addCandidatesToList(
+    fun assembleAndCheckCandidates(
         startNode: Node, phrase: String, numOfWords: Int, tempString: String
     ) {
         var currentNode = startNode
@@ -73,7 +51,7 @@ internal class Trie {
                 var newTempString =
                     if (numOfWords == this.numOfWords) "${child.value.letters}" else "$tempString ${child.value.letters}"
                 if (newTempString.length < this.maxLength && numOfWords > 1) {
-                    addCandidatesToList(root, newPhrase, numOfWords - 1, newTempString)
+                    assembleAndCheckCandidates(root, newPhrase, numOfWords - 1, newTempString)
 
                 }
 
@@ -92,7 +70,7 @@ internal class Trie {
                 }
             }
 
-            addCandidatesToList(child.value, newPhrase, numOfWords, tempString)
+            assembleAndCheckCandidates(child.value, newPhrase, numOfWords, tempString)
 
         }
     }

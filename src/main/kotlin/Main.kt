@@ -1,22 +1,24 @@
-import kotlinx.coroutines.runBlocking
 
 fun main() {
 
-    initLettersCountHash(3)
-    initAllowedLettersList()
+    var hash = "665e5bcb0c20062fe8abaaf4628bb154"
+    var clue = "poultryoutwitsants"
+    var numberOfWords = 4
+    var numOfSpaces = numberOfWords -1
 
+    var maxLength = clue.length + numOfSpaces
 
-    var candidateList: ArrayList<String> = ArrayList()
-    var clue = getClue()
-    var numberOfWords = getNumOfWords()
+    initLettersCountHash(clue, numOfSpaces)
+    initAllowedLettersList(clue)
 
-    var wordsTrie = getWordsTrie("resources/wordlist.dms", 3, 21)
+    var wordsTrie = getWordsTrie("resources/wordlist.dms", maxLength)
+
     wordsTrie.numOfWords = numberOfWords
     wordsTrie.clue = clue
-    wordsTrie.maxLength = clue.length + numberOfWords - 1
-    wordsTrie.hash = "665e5bcb0c20062fe8abaaf4628bb154"
+    wordsTrie.maxLength = maxLength
+    wordsTrie.hash = hash
 
-    wordsTrie.addCandidatesToList(wordsTrie.root(), clue, numberOfWords, "")
+    wordsTrie.assembleAndCheckCandidates(wordsTrie.root(), clue, numberOfWords, "")
 
 
 }
