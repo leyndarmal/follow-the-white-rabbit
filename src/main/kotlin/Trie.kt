@@ -54,6 +54,52 @@ internal class Trie {
     }
 
 
+    suspend fun addCandidatesToList(
+        startNode: Node, phrase: String, numOfWords: Int, tempString: String
+    ) {
+        var currentNode = startNode
+
+
+        for (child in currentNode.children) {
+            var indexToRemove = phrase.indexOf(child.key)
+
+            if (indexToRemove === -1) {
+                continue
+            }
+            var isWord: Boolean = child.value.isEndOfWord
+            var newPhrase = phrase.removeRange(indexToRemove, indexToRemove + 1)
+
+            if (isWord) { //use the current word if possible
+                var newTempString =
+                    if (numOfWords == this.numOfWords) "${child.value.letters}" else "$tempString ${child.value.letters}"
+                if (newTempString.length < this.maxLength && numOfWords > 1) {
+                    coroutineScope {
+                        addCandidatesToList(root, newPhrase, numOfWords - 1, newTempString)
+                    }
+
+                }
+
+                if (newTempString.length === this.maxLength) {
+                    if (isValid(newTempString, this.maxLength)) {
+                        coroutineScope {
+                            var myHash =
+                                BigInteger(1, md.digest(newTempString.toByteArray())).toString(16).padStart(32, '0')
+                            if (myHash == hash) {
+                                println(newTempString)
+                                exitProcess(1)
+                            }
+                        }
+                    }
+
+                }
+            }
+
+            //dont use word
+            coroutineScope {
+                addCandidatesToList(child.value, newPhrase, numOfWords, tempString)
+            }
+        }
+    }
 
 
 }
