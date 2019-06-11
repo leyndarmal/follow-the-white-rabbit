@@ -16,10 +16,7 @@ fun main() {
     wordsTrie.maxLength = clue.length + numberOfWords - 1
     wordsTrie.hash = "665e5bcb0c20062fe8abaaf4628bb154"
 
-    runBlocking {
-        wordsTrie.addCandidatesToList(wordsTrie.root(), clue, numberOfWords, "")
-
-    }
+    wordsTrie.addCandidatesToList(wordsTrie.root(), clue, numberOfWords, "")
 
 
 }

@@ -54,7 +54,7 @@ internal class Trie {
     }
 
 
-    suspend fun addCandidatesToList(
+    fun addCandidatesToList(
         startNode: Node, phrase: String, numOfWords: Int, tempString: String
     ) {
         var currentNode = startNode
@@ -73,31 +73,27 @@ internal class Trie {
                 var newTempString =
                     if (numOfWords == this.numOfWords) "${child.value.letters}" else "$tempString ${child.value.letters}"
                 if (newTempString.length < this.maxLength && numOfWords > 1) {
-                    coroutineScope {
-                        addCandidatesToList(root, newPhrase, numOfWords - 1, newTempString)
-                    }
+                    addCandidatesToList(root, newPhrase, numOfWords - 1, newTempString)
 
                 }
 
                 if (newTempString.length === this.maxLength) {
                     if (isValid(newTempString, this.maxLength)) {
-                        coroutineScope {
-                            var myHash =
-                                BigInteger(1, md.digest(newTempString.toByteArray())).toString(16).padStart(32, '0')
-                            if (myHash == hash) {
-                                println(newTempString)
-                                exitProcess(1)
-                            }
+
+                        var myHash =
+                            BigInteger(1, md.digest(newTempString.toByteArray())).toString(16).padStart(32, '0')
+                        if (myHash == hash) {
+                            println(newTempString)
+                            exitProcess(1)
                         }
+
                     }
 
                 }
             }
 
-            //dont use word
-            coroutineScope {
-                addCandidatesToList(child.value, newPhrase, numOfWords, tempString)
-            }
+            addCandidatesToList(child.value, newPhrase, numOfWords, tempString)
+
         }
     }
 
