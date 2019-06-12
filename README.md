@@ -1,6 +1,6 @@
 
 <h1 align="center">
-   My Solution  :flashlight:
+   My Solution
 </h1>
 
 <h4 align="center">My proposed solution to the "follow the rabbit hole" backend challenge</a>.</h4>
