@@ -16,6 +16,13 @@ internal class Trie {
         root = Node()
     }
 
+    constructor(numOfWords: Int, clue: String, hash: String) {
+        this.numOfWords = numOfWords
+        this.clue = clue
+        this.hash = hash
+        this.maxLength = numOfWords - 1 + clue.length
+    }
+
     fun insert(word: String) {
         counter++
         var current = root
@@ -35,8 +42,14 @@ internal class Trie {
     fun assembleAndCheckCandidates(
         startNode: Node, phrase: String, numOfWords: Int, tempString: String
     ) {
-        var currentNode = startNode
 
+        log("Building candidates and checking each one")
+        assembleAndCheckHelper(startNode, phrase, numOfWords, tempString)
+    }
+
+    private fun assembleAndCheckHelper(startNode: Node, phrase: String, numOfWords: Int, tempString: String) {
+
+        var currentNode = startNode
 
         for (child in currentNode.children) {
             var indexToRemove = phrase.indexOf(child.key)
@@ -51,7 +64,7 @@ internal class Trie {
                 var newTempString =
                     if (numOfWords == this.numOfWords) "${child.value.letters}" else "$tempString ${child.value.letters}"
                 if (newTempString.length < this.maxLength && numOfWords > 1) {
-                    assembleAndCheckCandidates(root, newPhrase, numOfWords - 1, newTempString)
+                    assembleAndCheckHelper(root, newPhrase, numOfWords - 1, newTempString)
 
                 }
 
@@ -61,7 +74,7 @@ internal class Trie {
                         var myHash =
                             BigInteger(1, md.digest(newTempString.toByteArray())).toString(16).padStart(32, '0')
                         if (myHash == hash) {
-                            println(newTempString)
+                            log("Found the matching candidate: '$newTempString', terminating")
                             exitProcess(1)
                         }
 
@@ -70,7 +83,7 @@ internal class Trie {
                 }
             }
 
-            assembleAndCheckCandidates(child.value, newPhrase, numOfWords, tempString)
+            assembleAndCheckHelper(child.value, newPhrase, numOfWords, tempString)
 
         }
     }
