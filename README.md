@@ -7,7 +7,7 @@
 
 <p align="center">
   <a href="#my-strategy">My Strategy</a> •  
-  <a href="#identifying-challenges-">Identifying Challenges</a> •  
+  <a href="#identifying-challenges">Identifying Challenges</a> •  
   <a href="#summary">Summary</a> •  
 </p>
 
@@ -45,5 +45,10 @@ Taking what we learn in theory, into heavyweight practice.<br>
 Like I had mentioned here, my first attempt was intended for 3 words in the anagram,
 which was a mistake. 
 Later on, I changed it to support any number of words.
+<br>
+I added here the stats for the hard challenge. it took about 11 mins to solve on my machine.
+
+![architecture](resources/performance.png)
+
 
 
